@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        SONAR_TOKEN = credentials('sonar-token')
+        SONAR_TOKEN = credentials('sonartoken')
         NEXUS_URL = "http://192.168.245.153:8081/repository/maven-releases/"
         NEXUS_CREDENTIALS = credentials('nexus-admin')
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-token')
