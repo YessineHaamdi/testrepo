@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        NPM_PATH = '/home/pipeline/.nvm/versions/node/v16.20.2/bin/npm'
         SONAR_TOKEN = credentials('sonartoken')
         NEXUS_URL = "http://192.168.245.153:8081/repository/maven-releases/"
         NEXUS_CREDENTIALS = credentials('nexus-admin')
@@ -16,19 +17,16 @@ pipeline {
         }
 
         stage('Build & Test Angular') {
-    steps {
-        dir('Angular_Gestion_Foyer') {
-            sh 'npm install'
-
-            // Clean up any leftover ngcc lock
-            sh 'rm -f node_modules/.ngcc_lock_file'
-
-            timeout(time: 10, unit: 'MINUTES') {
-                sh 'npm run build --prod'
+            steps {
+                dir('Angular_Gestion_Foyer') {
+                    sh '${NPM_PATH} install'  // Use npm from the specified path
+                    sh 'rm -f node_modules/.ngcc_lock_file'
+                    timeout(time: 10, unit: 'MINUTES') {
+                        sh '${NPM_PATH} run build --prod'  // Again, specify the npm path
+                    }
+                }
             }
         }
-    }
-}
 
 
         stage('Build & Test Spring Boot') {
