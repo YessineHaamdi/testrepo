@@ -19,7 +19,9 @@ pipeline {
             steps {
                 dir('Angular_Gestion_Foyer') {
                     sh 'npm install'
-                    sh 'npm run build --prod'
+                    timeout(time: 10, unit: 'MINUTES') {
+                        sh 'npm run build'
+                    }
                 }
             }
         }
