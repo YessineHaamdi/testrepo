@@ -16,15 +16,20 @@ pipeline {
         }
 
         stage('Build & Test Angular') {
-            steps {
-                dir('Angular_Gestion_Foyer') {
-                    sh 'npm install'
-                    timeout(time: 10, unit: 'MINUTES') {
-                        sh 'npm run build'
-                    }
-                }
+    steps {
+        dir('Angular_Gestion_Foyer') {
+            sh 'npm install'
+
+            // Clean up any leftover ngcc lock
+            sh 'rm -f node_modules/.ngcc_lock_file'
+
+            timeout(time: 10, unit: 'MINUTES') {
+                sh 'npm run build --prod'
             }
         }
+    }
+}
+
 
         stage('Build & Test Spring Boot') {
             steps {
