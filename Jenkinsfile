@@ -8,6 +8,15 @@ pipeline {
         NEXUS_CREDENTIALS = credentials('nexus-admin')
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-token')
     }
+    stages {
+        stage('Who Am I') {
+            steps {
+                sh 'whoami'
+                sh 'echo $HOME'
+                sh 'ls -la /home/pipeline/.nvm/versions/node/v16.20.2/bin/npm'
+            }
+        }
+    }
 
     stages {
         stage('Checkout Code') {
