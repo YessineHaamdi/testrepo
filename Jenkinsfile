@@ -2,19 +2,16 @@ pipeline {
     agent any
 
     environment {
-        PATH = "$NVM_DIR/versions/node/v16.20.2/bin:$PATH"  
         NVM_DIR = "/var/lib/jenkins/.nvm"
+        PATH = "$NVM_DIR/versions/node/v16.20.2/bin:$PATH"  // Make sure NVM_DIR is defined before usage
         MAVEN_HOME = "/usr/bin"
         SONAR_TOKEN = credentials('sonartoken')
         NEXUS_URL = "http://192.168.245.153:8081/repository/maven-releases/"
         NEXUS_CREDENTIALS = credentials('nexus-admin')
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-token')
     }
-    
 
     stages {
-        
-
         stage('Checkout Code') {
             steps {
                 git branch: 'main', credentialsId: 'Token Github', url: 'https://github.com/YessineHaamdi/testrepo.git'
@@ -24,20 +21,20 @@ pipeline {
         stage('Build & Test Angular') {
             steps {
                 dir('Angular_Gestion_Foyer') {
-                    sh '${NPM_PATH} install'  // Use npm from the specified path
+                    sh 'npm install'  // Use npm from the specified path
                     sh 'rm -f node_modules/.ngcc_lock_file'
                     timeout(time: 10, unit: 'MINUTES') {
-                        sh '${NPM_PATH} run build --prod'  // Again, specify the npm path
+                        sh 'npm run build --prod'
                     }
                 }
             }
         }
 
-
         stage('Build & Test Spring Boot') {
             steps {
                 dir('myFirstProject') {
-                    sh 'mvn clean package -DskipTests'
+                    // Ensure mvn is installed and in the correct path
+                    sh '/usr/bin/mvn clean package -DskipTests'  // Use the full path to mvn
                 }
             }
         }
@@ -45,7 +42,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 dir('myFirstProject') {
-                    sh 'mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN}'
+                    sh '/usr/bin/mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN}'  // Full path to mvn, using credentials securely
                 }
             }
         }
@@ -53,7 +50,7 @@ pipeline {
         stage('Upload Artifact to Nexus') {
             steps {
                 dir('myFirstProject') {
-                    sh "mvn deploy -DaltDeploymentRepository=nexus::default::${NEXUS_URL} -DrepositoryId=nexus"
+                    sh "/usr/bin/mvn deploy -DaltDeploymentRepository=nexus::default::${NEXUS_URL} -DrepositoryId=nexus"  // Full path to mvn
                 }
             }
         }
