@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        NPM_PATH = '/home/pipeline/.nvm/versions/node/v16.20.2/bin/npm'
+        PATH = "/home/pipeline/.nvm/versions/node/v16.20.2/bin:$PATH"
         SONAR_TOKEN = credentials('sonartoken')
         NEXUS_URL = "http://192.168.245.153:8081/repository/maven-releases/"
         NEXUS_CREDENTIALS = credentials('nexus-admin')
@@ -11,13 +11,7 @@ pipeline {
     
 
     stages {
-        stage('Debug Environment') {
-    steps {
-        sh 'whoami'
-        sh 'echo $HOME'
-        sh 'ls -la /home/pipeline/.nvm/versions/node/v16.20.2/bin/npm'
-    }
-}
+        
 
         stage('Checkout Code') {
             steps {
