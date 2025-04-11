@@ -48,12 +48,12 @@ pipeline {
         }
 
         stage('Upload Artifact to Nexus') {
-            steps {
-                dir('myFirstProject') {
-                    sh "/usr/bin/mvn deploy -DaltDeploymentRepository=nexus::default::${NEXUS_URL} -DrepositoryId=nexus"  // Full path to mvn
-                }
-            }
+    steps {
+        dir('myFirstProject') {
+            sh "/usr/bin/mvn deploy -DskipTests -DaltDeploymentRepository=nexus::default::${NEXUS_URL} -DrepositoryId=nexus"
         }
+    }
+}
 
         stage('Docker Build & Push') {
             steps {
