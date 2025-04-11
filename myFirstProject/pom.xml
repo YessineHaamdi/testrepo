@@ -125,12 +125,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Jacoco -->
-		<dependency>
-			<groupId>org.jacoco</groupId>
-			<artifactId>jacoco-maven-plugin</artifactId>
-			<version>0.8.6</version>
-		</dependency>
 	</dependencies>
 
 	<build>
