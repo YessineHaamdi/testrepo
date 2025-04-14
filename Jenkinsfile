@@ -23,9 +23,8 @@ pipeline {
                 dir('Angular_Gestion_Foyer') {
                     sh 'npm install'  // Use npm from the specified path
                     sh 'rm -f node_modules/.ngcc_lock_file'
-                    timeout(time: 10, unit: 'MINUTES') {
-                        sh 'npm run build --prod'
-                    }
+                    sh 'npm run build --prod'
+                    
                 }
             }
         }
