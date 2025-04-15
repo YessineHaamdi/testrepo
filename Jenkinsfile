@@ -24,7 +24,6 @@ pipeline {
                     sh 'npm install'  // Use npm from the specified path
                     sh 'rm -f node_modules/.ngcc_lock_file'
                     sh 'npm run build --prod'
-                    
                 }
             }
         }
@@ -45,42 +44,39 @@ pipeline {
                 }
             }
         }
-        
 
         stage('Upload Artifact to Nexus') {
-    steps {
-        dir('myFirstProject') {
-            withCredentials([usernamePassword(credentialsId: 'nexus-admin', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                sh '''
-                    mvn deploy \
-                      -DskipTests \
-                      -DaltDeploymentRepository=nexus::default::${NEXUS_URL} \
-                      -DrepositoryId=nexus \
-                      --settings ../jenkins/maven-settings.xml
-                '''
+            steps {
+                dir('myFirstProject') {
+                    withCredentials([usernamePassword(credentialsId: 'nexus-admin', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                        sh '''
+                            mvn deploy \
+                              -DskipTests \
+                              -DaltDeploymentRepository=nexus::default::${NEXUS_URL} \
+                              -DrepositoryId=nexus \
+                              --settings ../jenkins/maven-settings.xml
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Docker Build & Push to Docker Hub') {
+            steps {
+                script {
+                    // Build Docker image commands
+                    sh 'docker build -t angularpfe-app:latest ./Angular_Gestion_Foyer'
+                    sh 'docker build -t springpfe-app:latest ./myFirstProject'
+
+                    // Tag the images
+                    sh 'docker tag angularpfe-app:latest YessineHaamdi/angularpfe-app:latest'
+                    sh 'docker tag springpfe-app:latest YessineHaamdi/springpfe-app:latest'
+
+                    // Push the images
+                    sh 'docker push YessineHaamdi/angularpfe-app:latest'
+                    sh 'docker push YessineHaamdi/springpfe-app:latest'
+                }
             }
         }
     }
 }
-
-
-        stage('Docker Build & Push to Docker Hub') {
-    steps {
-        script {
-            // Build the Angular frontend Docker image
-            sh 'docker build -t angularpfe-app:latest ./Angular_Gestion_Foyer'
-            
-            // Build the Spring Boot backend Docker image
-            sh 'docker build -t springpfe-app:latest ./myFirstProject'
-
-            // Tag the images for Docker Hub
-            sh 'docker tag angularpfe-app:latest YessineHaamdi/angularpfe-app:latest'
-            sh 'docker tag springpfe-app:latest YessineHaamdi/springpfe-app:latest'
-
-            // Push the images to Docker Hub
-            sh 'docker push YessineHaamdi/angularpfe-app:latest'
-            sh 'docker push YessineHaamdi/springpfe-app:latest'
-        }
-    }
-}
-    }
