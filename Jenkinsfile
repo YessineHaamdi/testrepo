@@ -61,22 +61,27 @@ pipeline {
             }
         }
 
-        stage('Docker Build & Push to Docker Hub') {
-            steps {
-                script {
-                    // Build Docker image commands
-                    sh 'docker build -t angularpfe-app:latest ./Angular_Gestion_Foyer'
-                    sh 'docker build -t springpfe-app:latest ./myFirstProject'
+stage('Docker Build & Push to Docker Hub') {
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub-token', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+            script {
+                // Log in to Docker Hub
+                sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
 
-                    // Tag the images
-                    sh 'docker tag angularpfe-app:latest YessineHaamdi/angularpfe-app:latest'
-                    sh 'docker tag springpfe-app:latest YessineHaamdi/springpfe-app:latest'
+                // Build Docker images
+                sh 'docker build -t angularpfe-app:latest ./Angular_Gestion_Foyer'
+                sh 'docker build -t springpfe-app:latest ./myFirstProject'
 
-                    // Push the images
-                    sh 'docker push YessineHaamdi/angularpfe-app:latest'
-                    sh 'docker push YessineHaamdi/springpfe-app:latest'
-                }
+                // Tag the images
+                sh 'docker tag angularpfe-app:latest docker.io/$DOCKER_USER/angularpfe-app:latest'
+                sh 'docker tag springpfe-app:latest docker.io/$DOCKER_USER/springpfe-app:latest'
+
+                // Push the images
+                sh 'docker push docker.io/$DOCKER_USER/angularpfe-app:latest'
+                sh 'docker push docker.io/$DOCKER_USER/springpfe-app:latest'
             }
         }
     }
+}
+
 }
