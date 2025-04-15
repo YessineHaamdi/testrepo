@@ -64,34 +64,23 @@ pipeline {
 }
 
 
-        // Docker Build stage to build images
-        stage('Docker Build') {
-            steps {
-                script {
-                    // Build the Docker images without pushing to any registry yet
-                    sh '''
-                    docker build -t angularpfe-app:latest ./Angular_Gestion_Foyer
-                    docker build -t springpfe-app:latest ./myFirstProject
-                    '''
-                }
-            }
-        }
+        stage('Docker Build & Push to Docker Hub') {
+    steps {
+        script {
+            // Build the Angular frontend Docker image
+            sh 'docker build -t angularpfe-app:latest ./Angular_Gestion_Foyer'
+            
+            // Build the Spring Boot backend Docker image
+            sh 'docker build -t springpfe-app:latest ./myFirstProject'
 
-        // Push Docker images to Docker Hub
-        stage('Push Docker Images to Docker Hub') {
-            steps {
-                script {
-                    // Now push the images to Docker Hub
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-token', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh '''
-                        docker tag angularpfe-app:latest YessineHaamdi/angularpfe-app:latest
-                        docker tag springpfe-app:latest YessineHaamdi/springpfe-app:latest
-                        docker push YessineHaamdi/angularpfe-app:latest
-                        docker push YessineHaamdi/springpfe-app:latest
-                        '''
-                    }
-                }
-            }
+            // Tag the images for Docker Hub
+            sh 'docker tag angularpfe-app:latest YessineHaamdi/angularpfe-app:latest'
+            sh 'docker tag springpfe-app:latest YessineHaamdi/springpfe-app:latest'
+
+            // Push the images to Docker Hub
+            sh 'docker push YessineHaamdi/angularpfe-app:latest'
+            sh 'docker push YessineHaamdi/springpfe-app:latest'
         }
     }
 }
+    }
