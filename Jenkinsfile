@@ -21,7 +21,7 @@ pipeline {
         stage('Build & Test Angular') {
             steps {
                 dir('Angular_Gestion_Foyer') {
-                    sh 'npm install'  // Use npm from the specified path
+                    sh 'npm install'
                     sh 'rm -f node_modules/.ngcc_lock_file'
                     sh 'npm run build --prod'
                 }
@@ -31,8 +31,7 @@ pipeline {
         stage('Build & Test Spring Boot') {
             steps {
                 dir('myFirstProject') {
-                    // Ensure mvn is installed and in the correct path
-                    sh '/usr/bin/mvn clean package -DskipTests'  // Use the full path to mvn
+                    sh '/usr/bin/mvn clean package -DskipTests'
                 }
             }
         }
@@ -40,7 +39,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 dir('myFirstProject') {
-                    sh '/usr/bin/mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN}'  // Full path to mvn, using credentials securely
+                    sh '/usr/bin/mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN}'
                 }
             }
         }
@@ -61,27 +60,20 @@ pipeline {
             }
         }
 
-stage('Docker Build & Push to Docker Hub') {
-    steps {
-        withCredentials([usernamePassword(credentialsId: 'dockerhub-token', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-            script {
-                // Log in to Docker Hub
-                sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
-
-                // Build Docker images
-                sh 'docker build -t angularpfe-app:latest ./Angular_Gestion_Foyer'
-                sh 'docker build -t springpfe-app:latest ./myFirstProject'
-
-                // Tag the images
-                sh 'docker tag angularpfe-app:latest docker.io/$DOCKER_USER/angularpfe-app:latest'
-                sh 'docker tag springpfe-app:latest docker.io/$DOCKER_USER/springpfe-app:latest'
-
-                // Push the images
-                sh 'docker push docker.io/$DOCKER_USER/angularpfe-app:latest'
-                sh 'docker push docker.io/$DOCKER_USER/springpfe-app:latest'
+        stage('Docker Build & Push to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-token', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    script {
+                        sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
+                        sh 'docker build -t angularpfe-app:latest ./Angular_Gestion_Foyer'
+                        sh 'docker build -t springpfe-app:latest ./myFirstProject'
+                        sh 'docker tag angularpfe-app:latest docker.io/$DOCKER_USER/angularpfe-app:latest'
+                        sh 'docker tag springpfe-app:latest docker.io/$DOCKER_USER/springpfe-app:latest'
+                        sh 'docker push docker.io/$DOCKER_USER/angularpfe-app:latest'
+                        sh 'docker push docker.io/$DOCKER_USER/springpfe-app:latest'
+                    }
+                }
             }
         }
     }
-}
-
 }
