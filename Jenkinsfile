@@ -45,14 +45,7 @@ pipeline {
                 }
             }
         }
-        stage('Maven Deploy') {
-    steps {
-        withCredentials([usernamePassword(credentialsId: 'nexus-admin', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-            sh 'mvn deploy --settings jenkins/maven-settings.xml'
-        }
-    }
-}
-
+        
 
         stage('Upload Artifact to Nexus') {
     steps {
