@@ -64,13 +64,28 @@ pipeline {
 }
 
 
-        stage('Docker Build & Push') {
+        // Docker Build stage to build images
+        stage('Docker Build') {
             steps {
                 script {
-                    withDockerRegistry([credentialsId: 'dockerhub-token', url: 'https://index.docker.io/v1/']) {
+                    // Build the Docker images without pushing to any registry yet
+                    sh '''
+                    docker build -t angularpfe-app:latest ./Angular_Gestion_Foyer
+                    docker build -t springpfe-app:latest ./myFirstProject
+                    '''
+                }
+            }
+        }
+
+        // Push Docker images to Docker Hub
+        stage('Push Docker Images to Docker Hub') {
+            steps {
+                script {
+                    // Now push the images to Docker Hub
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-token', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh '''
-                        docker build -t YessineHaamdi/angularpfe-app:latest ./Angular_Gestion_Foyer
-                        docker build -t YessineHaamdi/springpfe-app:latest ./myFirstProject
+                        docker tag angularpfe-app:latest YessineHaamdi/angularpfe-app:latest
+                        docker tag springpfe-app:latest YessineHaamdi/springpfe-app:latest
                         docker push YessineHaamdi/angularpfe-app:latest
                         docker push YessineHaamdi/springpfe-app:latest
                         '''
