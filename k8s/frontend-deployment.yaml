@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
         - name: angularpfe-app
-          image: docker.io/YessineHaamdi/angularpfe-app:latest
+          image: docker.io/yessineHaamdi/angularpfe-app:latest
           ports:
             - containerPort: 4200

@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
         - name: springpfe-app
-          image: docker.io/YessineHaamdi/springpfe-app:latest
+          image: docker.io/yessineHaamdi/springpfe-app:latest
           ports:
             - containerPort: 8089
