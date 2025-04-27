@@ -36,7 +36,7 @@ pipeline {
             }
         }
 
-        /*stage('SonarQube Analysis') {
+        stage('SonarQube Analysis') {
             steps {
                 dir('myFirstProject') {
                     sh '/usr/bin/mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN}'
@@ -59,7 +59,7 @@ pipeline {
                 }
             }
         }
-*/
+
         stage('Docker Build & Push to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-token', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
