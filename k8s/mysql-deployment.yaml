@@ -19,7 +19,7 @@ spec:
         image: mysql:5.7 # You can choose a different version if needed
         env:
         - name: MYSQL_ROOT_PASSWORD
-          value: "root"  # Root password for the MySQL database
+          value: root  # Root password for the MySQL database
         - name: MYSQL_DATABASE
           value: "gestionfoyer"  # Database name
         ports:
