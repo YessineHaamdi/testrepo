@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   name: mysql-deployment
   namespace: default
-
 spec:
   replicas: 1
   selector:
@@ -16,18 +15,18 @@ spec:
     spec:
       containers:
       - name: mysql
-        image: mysql:5.7 # You can choose a different version if needed
+        image: mysql:5.7
         env:
         - name: MYSQL_ROOT_PASSWORD
-          value: root  # Root password for the MySQL database
+          value: "root"
         - name: MYSQL_DATABASE
-          value: "gestionfoyer"  # Database name
+          value: "gestionfoyer"
         ports:
         - containerPort: 3306
         volumeMounts:
         - name: mysql-storage
           mountPath: /var/lib/mysql
       volumes:
-        - name: mysql-storage
-          persistentVolumeClaim:
-            claimName: mysql-pvc
+      - name: mysql-storage
+        persistentVolumeClaim:
+          claimName: mysql-pvc
