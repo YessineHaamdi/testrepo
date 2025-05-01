@@ -16,17 +16,16 @@ spec:
       initContainers:
       - name: wait-for-mysql
         image: busybox
-        command: ['sh', '-c', 'until nc -z mysql-service 3306; do echo waiting for mysql; sleep 2; done;']
+        command: ['sh', '-c', 'until nc -z mysql 3306; do echo waiting for mysql; sleep 2; done;']
       containers:
       - name: backend
         image: docker.io/yessinehaamdi/springpfe-app:latest
         ports:
         - containerPort: 8089
         env:
-        - name: SPRING_APPLICATION_JSON
-          value: >-
-            {
-              "spring.datasource.url":"jdbc:mysql://mysql-service:3306/gestionfoyer?useUnicode=true&useJDBCCompliantTimezoneShift=true&createDatabaseIfNotExist=true&useLegacyDatetimeCode=false&serverTimezone=UTC",
-              "spring.datasource.username":"root",
-              "spring.datasource.password":"root"
-            }
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:mysql://mysql:3306/gestionfoyer?useUnicode=true&useJDBCCompliantTimezoneShift=true&createDatabaseIfNotExist=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
+        - name: SPRING_DATASOURCE_USERNAME
+          value: "root"
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "root"
