@@ -39,7 +39,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 dir('myFirstProject') {
-                    sh '/usr/bin/mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN}'
+                    sh "/usr/bin/mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN}"
                 }
             }
         }
@@ -48,15 +48,14 @@ pipeline {
             steps {
                 dir('myFirstProject') {
                     withCredentials([usernamePassword(credentialsId: 'nexus-admin', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                        script {
-                            env.NEXUS_URL = 'http://192.168.245.153:8081/repository/maven-releases/'
-                        }
-                        sh '''
+                        sh """
                             mvn deploy \
                               -DskipTests \
                               -DaltDeploymentRepository=nexus::default::${NEXUS_URL} \
-                              -DrepositoryId=nexus
-                        '''
+                              -DrepositoryId=nexus \
+                              -Dnexus.username=${NEXUS_USERNAME} \
+                              -Dnexus.password=${NEXUS_PASSWORD}
+                        """
                     }
                 }
             }
