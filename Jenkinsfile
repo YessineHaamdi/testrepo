@@ -48,12 +48,14 @@ pipeline {
             steps {
                 dir('myFirstProject') {
                     withCredentials([usernamePassword(credentialsId: 'nexus-admin', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                        script {
+                            env.NEXUS_URL = 'http://192.168.245.153:8081/repository/maven-releases/'
+                        }
                         sh '''
                             mvn deploy \
                               -DskipTests \
                               -DaltDeploymentRepository=nexus::default::${NEXUS_URL} \
-                              -DrepositoryId=nexus \
-                              --settings ../jenkins/maven-settings.xml
+                              -DrepositoryId=nexus
                         '''
                     }
                 }
