@@ -9,6 +9,8 @@ pipeline {
         NEXUS_URL = "http://192.168.245.153:8081/repository/maven-releases/"
         NEXUS_CREDENTIALS = credentials('nexus-admin')
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-token')
+        // Définition de la version dynamique avec build number en patch
+        DYNAMIC_VERSION = "1.0.${env.BUILD_NUMBER}"
     }
 
     stages {
@@ -54,7 +56,8 @@ pipeline {
                               -DaltDeploymentRepository=nexus::default::${NEXUS_URL} \
                               -DrepositoryId=nexus \
                               -Dnexus.username=${NEXUS_USERNAME} \
-                              -Dnexus.password=${NEXUS_PASSWORD}
+                              -Dnexus.password=${NEXUS_PASSWORD} \
+                              -Drevision=${DYNAMIC_VERSION}
                         """
                     }
                 }
