@@ -218,7 +218,7 @@
           </execution>
         </executions>
         <configuration>
-          <failBuildOnCVSS>9.0</failBuildOnCVSS>
+          <failBuildOnCVSS>0</failBuildOnCVSS>
           <outputDirectory>${project.build.directory}</outputDirectory>
           <formats>
             <format>HTML</format>
