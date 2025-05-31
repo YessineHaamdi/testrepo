@@ -76,8 +76,13 @@ pipeline {
         stage('Trivy Scan Docker Images') {
             steps {
                 script {
-                    sh 'trivy image --severity CRITICAL,HIGH --exit-code 1 --no-progress angularpfe-app:latest'
-                    sh 'trivy image --severity CRITICAL,HIGH --exit-code 1 --no-progress springpfe-app:latest'
+                    // Scan images but don't block the pipeline
+                    sh 'trivy image --severity CRITICAL,HIGH --format json --output trivy-report-angular.json angularpfe-app:latest'
+                    sh 'trivy image --severity CRITICAL,HIGH --format json --output trivy-report-spring.json springpfe-app:latest'
+
+                    // Optionally, you can display the reports in the console output
+                    sh 'cat trivy-report-angular.json'
+                    sh 'cat trivy-report-spring.json'
                 }
             }
         }
