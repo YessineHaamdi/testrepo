@@ -15,7 +15,6 @@ import { RechercheUniversitePipe } from 'src/app/core/pipes/Universite/recherche
 import { RechercheFoyerPipe } from 'src/app/core/pipes/Foyer/recherche-foyer.pipe';
 import { DetailsFoyerComponent } from './views/details-foyer/details-foyer.component';
 
-
 @NgModule({
   declarations: [
     AdminLayoutComponent,
@@ -34,7 +33,7 @@ import { DetailsFoyerComponent } from './views/details-foyer/details-foyer.compo
     AdminRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
-  ]
+    HttpClientModule,
+  ],
 })
-export class AdminModule { }
+export class AdminModule {}

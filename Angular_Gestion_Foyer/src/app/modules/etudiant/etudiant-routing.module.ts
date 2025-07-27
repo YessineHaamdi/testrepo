@@ -6,15 +6,19 @@ import { ListReservationComponent } from './views/list-reservation/list-reservat
 import { InfoFoyerUniversiteComponent } from './views/info-foyer-universite/info-foyer-universite.component';
 
 const routes: Routes = [
-  { path: '', component: EtudiantLayoutComponent, children:[
-    { path: 'etudiant-profile', component: EtudiantProfileComponent },
-    { path: 'infoFoyerUniversite', component: InfoFoyerUniversiteComponent },
-    { path: 'list-reservation', component: ListReservationComponent }
-  ] }
+  {
+    path: '',
+    component: EtudiantLayoutComponent,
+    children: [
+      { path: 'etudiant-profile', component: EtudiantProfileComponent },
+      { path: 'infoFoyerUniversite', component: InfoFoyerUniversiteComponent },
+      { path: 'list-reservation', component: ListReservationComponent },
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class EtudiantRoutingModule { }
+export class EtudiantRoutingModule {}

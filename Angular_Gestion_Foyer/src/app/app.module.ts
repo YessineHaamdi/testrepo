@@ -22,8 +22,7 @@ import { ResetPasswordComponent } from './home/views/reset-password/reset-passwo
     SignInComponent,
     SignUpComponent,
     ForgotPasswordComponent,
-    ResetPasswordComponent
-
+    ResetPasswordComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,9 +31,9 @@ import { ResetPasswordComponent } from './home/views/reset-password/reset-passwo
     ReactiveFormsModule,
     HttpClientModule,
     AdminModule,
-    EtudiantModule
+    EtudiantModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

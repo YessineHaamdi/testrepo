@@ -5,11 +5,10 @@ import { TypeChambre } from '../../models/TypeChambre/type-chambre.enum';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ChambreService {
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   addChambre(chambre: Chambre) {
     return this.http.post(`${environment.baseUrl}/chambre/add`, chambre);
@@ -24,26 +23,39 @@ export class ChambreService {
   }
 
   getChambresSansBloc() {
-    return this.http.get<Chambre[]>(`${environment.baseUrl}/chambre/getChambresSansBloc`);
+    return this.http.get<Chambre[]>(
+      `${environment.baseUrl}/chambre/getChambresSansBloc`,
+    );
   }
 
   getChambreById(idChambre: number) {
-    return this.http.get<Chambre>(`${environment.baseUrl}/chambre/${idChambre}`);
+    return this.http.get<Chambre>(
+      `${environment.baseUrl}/chambre/${idChambre}`,
+    );
   }
 
   getChambresParBlocEtType(idBloc: number, typeC: TypeChambre) {
-    return this.http.get<Chambre[]>(`${environment.baseUrl}/chambre/getChambresParBlocEtType/${idBloc}/${typeC}`);
+    return this.http.get<Chambre[]>(
+      `${environment.baseUrl}/chambre/getChambresParBlocEtType/${idBloc}/${typeC}`,
+    );
   }
 
   getNombreChambresParBloc(idBloc: number) {
-    return this.http.get<number>(`${environment.baseUrl}/chambre/getNombreChambresParBloc/${idBloc}`);
+    return this.http.get<number>(
+      `${environment.baseUrl}/chambre/getNombreChambresParBloc/${idBloc}`,
+    );
   }
 
   deleteChambre(idChambre: number) {
-    return this.http.delete(`${environment.baseUrl}/chambre/delete/${idChambre}`);
+    return this.http.delete(
+      `${environment.baseUrl}/chambre/delete/${idChambre}`,
+    );
   }
 
   desaffecterChambreDeBloc(idChambre: number) {
-    return this.http.put(`${environment.baseUrl}/chambre/desaffecterChambreDeBloc/${idChambre}`, null);
+    return this.http.put(
+      `${environment.baseUrl}/chambre/desaffecterChambreDeBloc/${idChambre}`,
+      null,
+    );
   }
 }

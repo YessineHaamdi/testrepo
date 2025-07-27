@@ -1,8 +1,8 @@
-import { Foyer } from "../foyer/foyer";
+import { Foyer } from '../foyer/foyer';
 
 export class Bloc {
-    idBloc!: number;
-    nomBloc!: string;
-    capaciteBloc!: number;
-    foyer!: Foyer;
+  idBloc!: number;
+  nomBloc!: string;
+  capaciteBloc!: number;
+  foyer!: Foyer;
 }

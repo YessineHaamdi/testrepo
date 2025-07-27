@@ -5,14 +5,16 @@ import { Etudiant } from '../../models/etudiant/etudiant';
 import { LoginPayload } from '../../models/login-payload';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthenticationService {
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   registerEtudiant(formData: FormData) {
-    return this.http.post(`${environment.baseUrl}/auth/registerEtudiant`, formData);
+    return this.http.post(
+      `${environment.baseUrl}/auth/registerEtudiant`,
+      formData,
+    );
   }
 
   login(user: LoginPayload) {
@@ -20,10 +22,16 @@ export class AuthenticationService {
   }
 
   forgetPassword(email: string) {
-    return this.http.post(`${environment.baseUrl}/auth/forgetpassword?email=${email}`,{});
+    return this.http.post(
+      `${environment.baseUrl}/auth/forgetpassword?email=${email}`,
+      {},
+    );
   }
 
   resetPassword(passwordResetToken: string, newPassword: string) {
-    return this.http.post(`${environment.baseUrl}/auth/resetPassword/${passwordResetToken}?newPassword=${newPassword}`, {});
+    return this.http.post(
+      `${environment.baseUrl}/auth/resetPassword/${passwordResetToken}?newPassword=${newPassword}`,
+      {},
+    );
   }
 }

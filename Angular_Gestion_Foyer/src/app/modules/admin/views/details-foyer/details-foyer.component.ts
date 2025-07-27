@@ -8,21 +8,23 @@ import { FoyerService } from 'src/app/core/services/foyer/foyer.service';
 @Component({
   selector: 'app-details-foyer',
   templateUrl: './details-foyer.component.html',
-  styleUrls: ['./details-foyer.component.css']
+  styleUrls: ['./details-foyer.component.css'],
 })
 export class DetailsFoyerComponent implements OnInit {
-
   @Input() inputData: number | undefined;
-  foyer!:Foyer;
-  listBlocs!:Bloc[];
+  foyer!: Foyer;
+  listBlocs!: Bloc[];
   nombreChambres: Map<number, number> = new Map<number, number>();
 
-  constructor(private foyerService: FoyerService, private blocService: BlocService, private chambreService: ChambreService) { }
+  constructor(
+    private foyerService: FoyerService,
+    private blocService: BlocService,
+    private chambreService: ChambreService,
+  ) {}
 
   ngOnInit(): void {
     this.getFoyerById(this.inputData);
   }
-
 
   getFoyerById(inputData: number | undefined) {
     if (inputData !== undefined) {
@@ -38,12 +40,13 @@ export class DetailsFoyerComponent implements OnInit {
   getAllBlocsByIdFoyer(idFoyer: number) {
     this.blocService.getAllBlocsByIdFoyer(idFoyer).subscribe((data) => {
       this.listBlocs = data;
-      this.listBlocs.forEach(bloc => {
-        this.chambreService.getNombreChambresParBloc(bloc.idBloc).subscribe((data) => {
-          this.nombreChambres.set(bloc.idBloc, data);
-        });
+      this.listBlocs.forEach((bloc) => {
+        this.chambreService
+          .getNombreChambresParBloc(bloc.idBloc)
+          .subscribe((data) => {
+            this.nombreChambres.set(bloc.idBloc, data);
+          });
       });
     });
   }
-  
 }

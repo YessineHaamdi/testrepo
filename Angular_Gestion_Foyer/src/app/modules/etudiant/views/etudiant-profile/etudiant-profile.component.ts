@@ -1,6 +1,11 @@
 import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Etudiant } from 'src/app/core/models/etudiant/etudiant';
 import { Universite } from 'src/app/core/models/universite/universite';
 import { EtudiantService } from 'src/app/core/services/etudiant/etudiant.service';
@@ -10,25 +15,28 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-etudiant-profile',
   templateUrl: './etudiant-profile.component.html',
-  styleUrls: ['./etudiant-profile.component.css']
+  styleUrls: ['./etudiant-profile.component.css'],
 })
 export class EtudiantProfileComponent implements OnInit {
-
-  userconnect = JSON.parse(localStorage.getItem("userconnect")!);
+  userconnect = JSON.parse(localStorage.getItem('userconnect')!);
   etudiant!: Etudiant;
   listUniversite: Universite[] = [];
   fileToUpload: Array<File> = [];
 
   updateForm: FormGroup;
 
-  constructor(private etudiantService: EtudiantService, private formBuilder: FormBuilder, private universiteService: UniversiteService) {
+  constructor(
+    private etudiantService: EtudiantService,
+    private formBuilder: FormBuilder,
+    private universiteService: UniversiteService,
+  ) {
     this.updateForm = this.formBuilder.group({
       nom: ['', [Validators.required, Validators.minLength(3)]],
       prenom: ['', Validators.required],
       image: ['', Validators.required],
       email: ['', Validators.required],
       cin: [0, Validators.required],
-      dateNaissance: ['', Validators.required]
+      dateNaissance: ['', Validators.required],
     });
   }
 
@@ -39,19 +47,21 @@ export class EtudiantProfileComponent implements OnInit {
   }
 
   getOneEtudiant() {
-    this.etudiantService.getOneEtudiant(this.userconnect.id).subscribe(data => {
-      this.etudiant = data;
-      
-      this.updateForm.patchValue({
-        nom: this.etudiant.nom,
-        prenom: this.etudiant.prenom,
-        image: this.etudiant.image,
-        email: this.etudiant.email,
-        cin: this.etudiant.cin,
-        dateNaissance: this.formatDateNaissance(this.etudiant.dateNaissance)
+    this.etudiantService
+      .getOneEtudiant(this.userconnect.id)
+      .subscribe((data) => {
+        this.etudiant = data;
+
+        this.updateForm.patchValue({
+          nom: this.etudiant.nom,
+          prenom: this.etudiant.prenom,
+          image: this.etudiant.image,
+          email: this.etudiant.email,
+          cin: this.etudiant.cin,
+          dateNaissance: this.formatDateNaissance(this.etudiant.dateNaissance),
+        });
+        console.log(this.etudiant);
       });
-      console.log(this.etudiant);
-    });
   }
 
   private formatDateNaissance(date: any): string {
@@ -69,92 +79,102 @@ export class EtudiantProfileComponent implements OnInit {
   }
 
   getAllUniversites() {
-    this.universiteService.getAllUniversites().subscribe((data: Universite[]) => {
-      this.listUniversite = data;
-    });
+    this.universiteService
+      .getAllUniversites()
+      .subscribe((data: Universite[]) => {
+        this.listUniversite = data;
+      });
   }
 
   updateEtudiant() {
     if (this.updateForm.valid) {
       const updatedEtudiant: Etudiant = {
         ...this.etudiant,
-        ...this.updateForm.value
+        ...this.updateForm.value,
       };
 
-      this.etudiantService.updateEtudiant(updatedEtudiant).subscribe(res => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Information modifiée avec succès',
-          showConfirmButton: false,
-          timer: 3000
-        });
-        localStorage.setItem('userconnect', JSON.stringify(res));
-        setTimeout(() => {
-          window.location.href = "http://localhost:4200/etudiant/etudiant-profile";
-        }, 3000);
-      }, error => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Erreur lors de la mise à jour',
-          text: error.message
-        });
-      });
+      this.etudiantService.updateEtudiant(updatedEtudiant).subscribe(
+        (res) => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Information modifiée avec succès',
+            showConfirmButton: false,
+            timer: 3000,
+          });
+          localStorage.setItem('userconnect', JSON.stringify(res));
+          setTimeout(() => {
+            window.location.href =
+              'http://localhost:4200/etudiant/etudiant-profile';
+          }, 3000);
+        },
+        (error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Erreur lors de la mise à jour',
+            text: error.message,
+          });
+        },
+      );
     } else {
       Swal.fire({
         icon: 'error',
         title: 'Invalid Form',
-        text: 'Please check your form for errors'
+        text: 'Please check your form for errors',
       });
     }
   }
 
-  handleFileInput(files:any){
-    this.fileToUpload=<Array<File>>files.target.files;
+  handleFileInput(files: any) {
+    this.fileToUpload = <Array<File>>files.target.files;
   }
 
   updateImgEtudiant() {
     let formData = new FormData();
-    formData.append("image", this.fileToUpload[0]);
+    formData.append('image', this.fileToUpload[0]);
 
-    this.etudiantService.updateImage(this.userconnect.id, formData).subscribe(res => {
-      const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 750,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.addEventListener('mouseenter', Swal.stopTimer)
-          toast.addEventListener('mouseleave', Swal.resumeTimer)
-        }
-      });
-      
-      Toast.fire({
-        icon: 'success',
-        title: 'Image modifiée avec succès'
-      });
+    this.etudiantService.updateImage(this.userconnect.id, formData).subscribe(
+      (res) => {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 750,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+          },
+        });
 
-      localStorage.setItem('userconnect', JSON.stringify(res));
-      setTimeout(() => {
-        window.location.href = "http://localhost:4200/etudiant/etudiant-profile";
-      }, 750);
-    }, err => {
-      const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 1000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.addEventListener('mouseenter', Swal.stopTimer)
-          toast.addEventListener('mouseleave', Swal.resumeTimer)
-        }
-      });
+        Toast.fire({
+          icon: 'success',
+          title: 'Image modifiée avec succès',
+        });
 
-      Toast.fire({
-        icon: 'error',
-        title: 'Erreur lors de la mise à jour de l\'image'
-      });
-    });
+        localStorage.setItem('userconnect', JSON.stringify(res));
+        setTimeout(() => {
+          window.location.href =
+            'http://localhost:4200/etudiant/etudiant-profile';
+        }, 750);
+      },
+      (err) => {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 1000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+          },
+        });
+
+        Toast.fire({
+          icon: 'error',
+          title: "Erreur lors de la mise à jour de l'image",
+        });
+      },
+    );
   }
 }

@@ -4,11 +4,10 @@ import { Bloc } from '../../models/bloc/bloc';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BlocService {
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   addBloc(bloc: Bloc) {
     return this.http.post(`${environment.baseUrl}/bloc/add`, bloc);
@@ -23,7 +22,9 @@ export class BlocService {
   }
 
   getAllBlocsByIdFoyer(idFoyer: number) {
-    return this.http.get<Bloc[]>(`${environment.baseUrl}/bloc/getAllBlocsByIdFoyer/${idFoyer}`);
+    return this.http.get<Bloc[]>(
+      `${environment.baseUrl}/bloc/getAllBlocsByIdFoyer/${idFoyer}`,
+    );
   }
 
   getBlocById(idBloc: number) {
@@ -35,14 +36,23 @@ export class BlocService {
   }
 
   affecterChambresABloc(idChambre: number[], idBloc: number) {
-    return this.http.put(`${environment.baseUrl}/bloc/affecterChambres/${idBloc}`, idChambre);
+    return this.http.put(
+      `${environment.baseUrl}/bloc/affecterChambres/${idBloc}`,
+      idChambre,
+    );
   }
 
   affecterBlocAFoyer(idBloc: number, idFoyer: number) {
-    return this.http.put(`${environment.baseUrl}/bloc/affecterBlocFoyer/${idBloc}/${idFoyer}`, null);
+    return this.http.put(
+      `${environment.baseUrl}/bloc/affecterBlocFoyer/${idBloc}/${idFoyer}`,
+      null,
+    );
   }
 
   desaffecterBlocFoyer(idBloc: number) {
-    return this.http.put(`${environment.baseUrl}/bloc/desaffecterBlocFoyer/${idBloc}`, null);
+    return this.http.put(
+      `${environment.baseUrl}/bloc/desaffecterBlocFoyer/${idBloc}`,
+      null,
+    );
   }
 }

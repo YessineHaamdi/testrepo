@@ -1,5 +1,5 @@
 export enum TypeChambre {
-    SIMPLE = 'SIMPLE',
-    DOUBLE = 'DOUBLE',
-    TRIPLE = 'TRIPLE'
+  SIMPLE = 'SIMPLE',
+  DOUBLE = 'DOUBLE',
+  TRIPLE = 'TRIPLE',
 }

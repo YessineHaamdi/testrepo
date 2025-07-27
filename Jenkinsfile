@@ -9,7 +9,6 @@ pipeline {
         NEXUS_URL = "http://192.168.245.153:8081/repository/maven-releases/"
         NEXUS_CREDENTIALS = credentials('nexus-admin')
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-token')
-        // Définition de la version dynamique avec build number en patch
         DYNAMIC_VERSION = "1.0.${env.BUILD_NUMBER}"
     }
 
@@ -17,6 +16,15 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 git branch: 'main', credentialsId: 'Token Github', url: 'https://github.com/YessineHaamdi/testrepo.git'
+            }
+        }
+
+        stage('Prettier Check') {
+            steps {
+                dir('Angular_Gestion_Foyer') {
+                    sh 'npm install'
+                    sh 'npm run prettier:check'
+                }
             }
         }
 
@@ -33,7 +41,8 @@ pipeline {
         stage('Build & Test Spring Boot') {
             steps {
                 dir('myFirstProject') {
-                    sh '/usr/bin/mvn clean package -DskipTests'
+                    sh "${MAVEN_HOME}/mvn clean test"
+                    sh "${MAVEN_HOME}/mvn clean package"
                 }
             }
         }
@@ -41,7 +50,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 dir('myFirstProject') {
-                    sh "/usr/bin/mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN}"
+                    sh "${MAVEN_HOME}/mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN}"
                 }
             }
         }
@@ -52,7 +61,6 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'nexus-admin', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
                         sh """
                             mvn deploy \
-                              -DskipTests \
                               -DaltDeploymentRepository=nexus::default::${NEXUS_URL} \
                               -DrepositoryId=nexus \
                               -Dnexus.username=${NEXUS_USERNAME} \
@@ -76,11 +84,8 @@ pipeline {
         stage('Trivy Scan Docker Images') {
             steps {
                 script {
-                    // Scan images but don't block the pipeline
                     sh 'trivy image --severity CRITICAL,HIGH --format json --output trivy-report-angular.json angularpfe-app:latest'
                     sh 'trivy image --severity CRITICAL,HIGH --format json --output trivy-report-spring.json springpfe-app:latest'
-
-                    // Optionally, you can display the reports in the console output
                     sh 'cat trivy-report-angular.json'
                     sh 'cat trivy-report-spring.json'
                 }

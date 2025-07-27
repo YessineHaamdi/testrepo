@@ -1,26 +1,34 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import {
+  ActivatedRouteSnapshot,
+  CanActivate,
+  Router,
+  RouterStateSnapshot,
+  UrlTree,
+} from '@angular/router';
 import { Observable } from 'rxjs';
 import { Role } from '../../models/Role/role.enum';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthEtudiantGuard implements CanActivate {
+  userconnect = JSON.parse(localStorage.getItem('userconnect')!);
 
-  userconnect = JSON.parse(localStorage.getItem("userconnect")!);
-
-  constructor(private route: Router) { }
+  constructor(private route: Router) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    if (this.userconnect.role==Role.ETUDIANT)
-      return true
+    state: RouterStateSnapshot,
+  ):
+    | Observable<boolean | UrlTree>
+    | Promise<boolean | UrlTree>
+    | boolean
+    | UrlTree {
+    if (this.userconnect.role == Role.ETUDIANT) return true;
     else {
-      this.route.navigateByUrl('/**')
-      return false
+      this.route.navigateByUrl('/**');
+      return false;
     }
   }
-  
 }

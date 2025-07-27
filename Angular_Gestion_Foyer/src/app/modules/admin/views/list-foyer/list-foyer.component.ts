@@ -9,27 +9,30 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-list-foyer',
   templateUrl: './list-foyer.component.html',
-  styleUrls: ['./list-foyer.component.css']
+  styleUrls: ['./list-foyer.component.css'],
 })
 export class ListFoyerComponent implements OnInit {
-
   listFoyer: Foyer[] = [];
   selectedFoyer: Foyer | null = null;
   rechercheFoyer: string = '';
   FoyerForm!: FormGroup;
   FoyerBUForm!: FormGroup;
-  id_foyer!:number;
-  showMe:boolean=false;
+  id_foyer!: number;
+  showMe: boolean = false;
 
   listUniversitesWithoutFoyer: Universite[] = [];
   selectedUniversiteId: number | null = null;
   panneauActif: string = 'heading-1';
 
-  constructor(private formBuilder: FormBuilder, private foyerService:FoyerService, private universiteService: UniversiteService) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private foyerService: FoyerService,
+    private universiteService: UniversiteService,
+  ) {}
 
-  infoFoyer(id:number) {
-    this.id_foyer=id;
-    this.showMe=!this.showMe;
+  infoFoyer(id: number) {
+    this.id_foyer = id;
+    this.showMe = !this.showMe;
   }
 
   ngOnInit() {
@@ -37,13 +40,13 @@ export class ListFoyerComponent implements OnInit {
     this.getUniversitesWithoutFoyer();
     this.FoyerForm = this.formBuilder.group({
       nomFoyer: ['', Validators.required],
-      capaciteFoyer: ['', Validators.required]
+      capaciteFoyer: ['', Validators.required],
     });
     this.FoyerBUForm = this.formBuilder.group({
       universiteId: [null, Validators.required],
       nomFoyer: ['', Validators.required],
       capaciteFoyer: ['', Validators.required],
-      blocs: this.formBuilder.array([])
+      blocs: this.formBuilder.array([]),
     });
     this.ajouterBloc();
   }
@@ -63,7 +66,7 @@ export class ListFoyerComponent implements OnInit {
           icon: 'success',
           title: 'Le foyer a été ajoutée avec succès',
           showConfirmButton: false,
-          timer: 1500
+          timer: 1500,
         });
         this.getAllFoyer();
         this.FoyerForm.reset();
@@ -78,7 +81,7 @@ export class ListFoyerComponent implements OnInit {
   ajouterBloc() {
     const blocGroup = this.formBuilder.group({
       nomBloc: ['', Validators.required],
-      capaciteBloc: ['', Validators.required]
+      capaciteBloc: ['', Validators.required],
     });
     this.blocs.push(blocGroup);
   }
@@ -88,49 +91,57 @@ export class ListFoyerComponent implements OnInit {
   }
 
   getUniversitesWithoutFoyer() {
-    this.universiteService.getUniversitesWithoutFoyer().subscribe((res: Universite[]) => {
-      this.listUniversitesWithoutFoyer = res;
-    });
+    this.universiteService
+      .getUniversitesWithoutFoyer()
+      .subscribe((res: Universite[]) => {
+        this.listUniversitesWithoutFoyer = res;
+      });
   }
 
   ajouerFoyerBU() {
     if (this.FoyerBUForm.valid) {
       const universiteFormControl = this.FoyerBUForm.get('universiteId');
-  
+
       if (universiteFormControl && universiteFormControl.value) {
         const universiteId = universiteFormControl.value;
-  
-        this.foyerService.ajouterFoyerEtAffecterAUniversite(this.FoyerBUForm.value, universiteId).subscribe(
-          () => {
-            Swal.fire({
-              toast: true,
-              position: 'top-end',
-              icon: 'success',
-              title: 'Le foyer a été ajoutée avec succès',
-              showConfirmButton: false,
-              timer: 1500
-            });
-            this.getAllFoyer();
-            this.FoyerBUForm.reset();
-          },
-          error => {
-            console.error("Erreur lors de l'ajout du foyer:", error);
-          }
-        );
+
+        this.foyerService
+          .ajouterFoyerEtAffecterAUniversite(
+            this.FoyerBUForm.value,
+            universiteId,
+          )
+          .subscribe(
+            () => {
+              Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: 'Le foyer a été ajoutée avec succès',
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              this.getAllFoyer();
+              this.FoyerBUForm.reset();
+            },
+            (error) => {
+              console.error("Erreur lors de l'ajout du foyer:", error);
+            },
+          );
       } else {
-        console.log("Aucune université sélectionnée ou le formulaire 'universiteId' est introuvable");
+        console.log(
+          "Aucune université sélectionnée ou le formulaire 'universiteId' est introuvable",
+        );
       }
     } else {
-      console.log("Formulaire FoyerBUForm non valide");
+      console.log('Formulaire FoyerBUForm non valide');
     }
   }
-
 
   openEditModal(foyer: Foyer) {
     this.selectedFoyer = foyer;
     this.FoyerForm.setValue({
       nomFoyer: foyer.nomFoyer,
-      capaciteFoyer: foyer.capaciteFoyer
+      capaciteFoyer: foyer.capaciteFoyer,
     });
   }
 
@@ -138,7 +149,7 @@ export class ListFoyerComponent implements OnInit {
     if (this.FoyerForm.valid && this.selectedFoyer) {
       const updatedFoyer: Foyer = {
         ...this.selectedFoyer,
-        ...this.FoyerForm.value
+        ...this.FoyerForm.value,
       };
       this.foyerService.updateFoyer(updatedFoyer).subscribe(() => {
         this.getAllFoyer();
@@ -147,7 +158,7 @@ export class ListFoyerComponent implements OnInit {
     }
   }
 
-  deleteFoyer(id:number){
+  deleteFoyer(id: number) {
     this.foyerService.deleteFoyer(id).subscribe(() => {
       Swal.fire({
         toast: true,
@@ -155,7 +166,7 @@ export class ListFoyerComponent implements OnInit {
         icon: 'success',
         title: 'Le foyer a été supprimée avec succès',
         showConfirmButton: false,
-        timer: 1500
+        timer: 1500,
       });
       this.getAllFoyer();
     });

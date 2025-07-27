@@ -5,11 +5,10 @@ import { EtudiantService } from 'src/app/core/services/etudiant/etudiant.service
 @Component({
   selector: 'app-list-etudiant',
   templateUrl: './list-etudiant.component.html',
-  styleUrls: ['./list-etudiant.component.css']
+  styleUrls: ['./list-etudiant.component.css'],
 })
 export class ListEtudiantComponent {
-
-  constructor(public etudiantService: EtudiantService) { }
+  constructor(public etudiantService: EtudiantService) {}
 
   listEtudiant: Etudiant[] = [];
   rechercheEtudiant: string = '';
@@ -23,5 +22,4 @@ export class ListEtudiantComponent {
       this.listEtudiant = res;
     });
   }
-
 }

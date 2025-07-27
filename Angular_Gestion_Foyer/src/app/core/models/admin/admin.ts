@@ -1,4 +1,3 @@
-import { User } from "../user/user";
+import { User } from '../user/user';
 
-export class Admin extends User {
-}
+export class Admin extends User {}

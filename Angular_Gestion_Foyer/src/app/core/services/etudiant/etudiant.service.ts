@@ -5,11 +5,10 @@ import { Etudiant } from '../../models/etudiant/etudiant';
 import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class EtudiantService {
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
@@ -29,18 +28,28 @@ export class EtudiantService {
   }
 
   getOneEtudiant(idEtudiant: number) {
-    return this.http.get<Etudiant>(`${environment.baseUrl}/etudiant/${idEtudiant}`);
+    return this.http.get<Etudiant>(
+      `${environment.baseUrl}/etudiant/${idEtudiant}`,
+    );
   }
 
   deleteEtudiant(idEtudiant: number) {
-    return this.http.delete(`${environment.baseUrl}/etudiant/delete/${idEtudiant}`);
+    return this.http.delete(
+      `${environment.baseUrl}/etudiant/delete/${idEtudiant}`,
+    );
   }
 
-  updatePassword(idEtudiant:number , password:string){
-    return this.http.put(`${environment.baseUrl}/etudiant/updatePassword/${idEtudiant}/${password}`, {})
+  updatePassword(idEtudiant: number, password: string) {
+    return this.http.put(
+      `${environment.baseUrl}/etudiant/updatePassword/${idEtudiant}/${password}`,
+      {},
+    );
   }
 
-  updateImage(idEtudiant:number , newImage:any){
-    return this.http.put(`${environment.baseUrl}/etudiant/updateImage/${idEtudiant}`, newImage)
+  updateImage(idEtudiant: number, newImage: any) {
+    return this.http.put(
+      `${environment.baseUrl}/etudiant/updateImage/${idEtudiant}`,
+      newImage,
+    );
   }
 }

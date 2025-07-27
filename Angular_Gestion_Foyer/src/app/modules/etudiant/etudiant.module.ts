@@ -8,19 +8,18 @@ import { EtudiantProfileComponent } from './views/etudiant-profile/etudiant-prof
 import { ListReservationComponent } from './views/list-reservation/list-reservation.component';
 import { InfoFoyerUniversiteComponent } from './views/info-foyer-universite/info-foyer-universite.component';
 
-
 @NgModule({
   declarations: [
     EtudiantLayoutComponent,
     EtudiantProfileComponent,
     ListReservationComponent,
-    InfoFoyerUniversiteComponent
+    InfoFoyerUniversiteComponent,
   ],
   imports: [
     CommonModule,
     EtudiantRoutingModule,
     FormsModule,
-    ReactiveFormsModule
-  ]
+    ReactiveFormsModule,
+  ],
 })
-export class EtudiantModule { }
+export class EtudiantModule {}

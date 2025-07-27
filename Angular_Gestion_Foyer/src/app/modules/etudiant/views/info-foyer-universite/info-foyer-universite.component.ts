@@ -10,18 +10,22 @@ import { UniversiteService } from 'src/app/core/services/universite/universite.s
 @Component({
   selector: 'app-info-foyer-universite',
   templateUrl: './info-foyer-universite.component.html',
-  styleUrls: ['./info-foyer-universite.component.css']
+  styleUrls: ['./info-foyer-universite.component.css'],
 })
 export class InfoFoyerUniversiteComponent {
-
-  universite!:Universite;
-  foyer!:Foyer;
-  listBlocs!:Bloc[];
+  universite!: Universite;
+  foyer!: Foyer;
+  listBlocs!: Bloc[];
   nombreChambres: Map<number, number> = new Map<number, number>();
 
-  userconnect = JSON.parse(localStorage.getItem("userconnect")!);
+  userconnect = JSON.parse(localStorage.getItem('userconnect')!);
 
-  constructor(private foyerService:FoyerService, private universiteService:UniversiteService, private blocService:BlocService, private chambreService:ChambreService) { }
+  constructor(
+    private foyerService: FoyerService,
+    private universiteService: UniversiteService,
+    private blocService: BlocService,
+    private chambreService: ChambreService,
+  ) {}
 
   ngOnInit(): void {
     this.getUniversiteByIdEtudiant();
@@ -29,10 +33,12 @@ export class InfoFoyerUniversiteComponent {
 
   getUniversiteByIdEtudiant() {
     const idEtudiant = this.userconnect.id;
-    this.universiteService.getUniversiteByIdEtudiant(idEtudiant).subscribe((data) => {
-      this.universite = data;
-      this.getFoyerByIdEtudiant(idEtudiant);
-    });
+    this.universiteService
+      .getUniversiteByIdEtudiant(idEtudiant)
+      .subscribe((data) => {
+        this.universite = data;
+        this.getFoyerByIdEtudiant(idEtudiant);
+      });
   }
 
   getFoyerByIdEtudiant(idEtudiant: number) {
@@ -45,12 +51,13 @@ export class InfoFoyerUniversiteComponent {
   getAllBlocsByIdFoyer(idFoyer: number) {
     this.blocService.getAllBlocsByIdFoyer(idFoyer).subscribe((data) => {
       this.listBlocs = data;
-      this.listBlocs.forEach(bloc => {
-        this.chambreService.getNombreChambresParBloc(bloc.idBloc).subscribe((data) => {
-          this.nombreChambres.set(bloc.idBloc, data);
-        });
+      this.listBlocs.forEach((bloc) => {
+        this.chambreService
+          .getNombreChambresParBloc(bloc.idBloc)
+          .subscribe((data) => {
+            this.nombreChambres.set(bloc.idBloc, data);
+          });
       });
     });
   }
-
 }
