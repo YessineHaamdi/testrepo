@@ -106,4 +106,21 @@ pipeline {
             }
         }
     }
+
+    post {
+        success {
+            emailext (
+                subject: "✅ SUCCESS: Build #${BUILD_NUMBER}",
+                body: "Good news! The pipeline for ${env.JOB_NAME} build #${BUILD_NUMBER} succeeded.\nCheck console output: ${env.BUILD_URL}",
+                to: 'your-email@gmail.com'
+            )
+        }
+        failure {
+            emailext (
+                subject: "❌ FAILURE: Build #${BUILD_NUMBER}",
+                body: "Oops! The pipeline for ${env.JOB_NAME} build #${BUILD_NUMBER} failed.\nCheck details: ${env.BUILD_URL}",
+                to: 'your-email@gmail.com'
+            )
+        }
+    }
 }
