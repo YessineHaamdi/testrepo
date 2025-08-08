@@ -11,7 +11,7 @@ spec:
     - protocol: TCP
       port: 8089
       targetPort: 8089
-  type: ClusterIP  # Backend should stay internal
+  type: NodePort  # Backend should stay internal
 
 ---
 apiVersion: v1
