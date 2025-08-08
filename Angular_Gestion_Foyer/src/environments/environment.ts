@@ -1,4 +1,4 @@
 export const environment = {
-  production: false,
-  baseUrl: 'http://backend-service:8089/GestionFoyer',
+  production: true,
+  baseUrl: 'http://192.168.245.155:31089/GestionFoyer',
 };
