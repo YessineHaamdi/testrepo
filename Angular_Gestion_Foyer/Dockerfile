@@ -1,16 +1,20 @@
 FROM node:20
+
 WORKDIR /app
 
+# Install Angular CLI globally
 RUN npm install -g @angular/cli@15
 
+# Copy package files and install deps
 COPY package*.json ./
+RUN npm install --omit=dev --legacy-peer-deps
 
-RUN npm install
-
+# Copy the full app and build it in prod mode
 COPY . .
+RUN ng build --configuration=production
 
-RUN ng build
-
+# EXPOSE the dev server port
 EXPOSE 4200
 
-CMD ["ng", "serve", "--host", "0.0.0.0", "--port", "4200", "--disable-host-check"]
+# Start with ng serve (still not optimal for prod, but OK for your setup)
+CMD ["npx", "ng", "serve", "--host", "0.0.0.0", "--port", "4200", "--disable-host-check", "--configuration=production"]
