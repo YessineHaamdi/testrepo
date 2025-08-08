@@ -9,9 +9,10 @@ spec:
     app: backend
   ports:
     - protocol: TCP
-      port: 8089
-      targetPort: 8089
-  type: NodePort  # Backend should stay internal
+      port: 8089        # Service port inside cluster
+      targetPort: 8089  # Pod container port
+      nodePort: 31089   # Fixed NodePort to expose externally
+  type: NodePort
 
 ---
 apiVersion: v1
