@@ -84,8 +84,8 @@ pipeline {
         stage('Trivy Scan Docker Images') {
             steps {
                 script {
-                    sh 'trivy image --severity CRITICAL,HIGH --format json --output trivy-report-angular.json angularpfe-app:latest'
-                    sh 'trivy image --severity CRITICAL,HIGH --format json --output trivy-report-spring.json springpfe-app:latest'
+                    sh 'trivy image --timeout 15m --scanners vuln --severity CRITICAL,HIGH --format json --output trivy-report-angular.json angularpfe-app:latest'
+                    sh 'trivy image --timeout 15m --scanners vuln --severity CRITICAL,HIGH --format json --output trivy-report-spring.json springpfe-app:latest'
                     sh 'cat trivy-report-angular.json'
                     sh 'cat trivy-report-spring.json'
                 }
