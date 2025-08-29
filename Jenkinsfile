@@ -84,8 +84,9 @@ pipeline {
         stage('Trivy Scan Docker Images') {
             steps {
                 script {
-                    sh 'trivy image --timeout 15m --scanners vuln --severity CRITICAL,HIGH --format json --output trivy-report-angular.json angularpfe-app:latest'
-                    sh 'trivy image --timeout 15m --scanners vuln --severity CRITICAL,HIGH --format json --output trivy-report-spring.json springpfe-app:latest'
+                    // Set timeout 15 minutes per image scan, only scan vulnerabilities
+                    sh 'trivy image --timeout 15m --scanners vuln --severity CRITICAL,HIGH --format json --exit-code 0 --output trivy-report-angular.json angularpfe-app:latest'
+                    sh 'trivy image --timeout 15m --scanners vuln --severity CRITICAL,HIGH --format json --exit-code 0 --output trivy-report-spring.json springpfe-app:latest'
                     sh 'cat trivy-report-angular.json'
                     sh 'cat trivy-report-spring.json'
                 }
@@ -109,14 +110,14 @@ pipeline {
 
     post {
         success {
-            emailext (
+            emailext(
                 subject: "✅ SUCCESS: Build #${BUILD_NUMBER}",
                 body: "Good news! The pipeline for ${env.JOB_NAME} build #${BUILD_NUMBER} succeeded.\nCheck console output: ${env.BUILD_URL}",
                 to: 'haamdiyessine@gmail.com'
             )
         }
         failure {
-            emailext (
+            emailext(
                 subject: "❌ FAILURE: Build #${BUILD_NUMBER}",
                 body: "Oops! The pipeline for ${env.JOB_NAME} build #${BUILD_NUMBER} failed.\nCheck details: ${env.BUILD_URL}",
                 to: 'haamdiyessine@gmail.com'
